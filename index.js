@@ -104,66 +104,51 @@ function startHTML (){
 }
 
 function addHTML(teamMember) {
-    return new Promise(function() {
-        const name = teamMember.getName();
-        const role = teamMember.getRole();
-        const id = teamMember.getId();
-        const email = teamMember.getEmail();
-        let data = ''
-
-        if (role === "Manager") {
-            const officePhone = teamMember.getOffice();
-            data = `
-                <div class="col-6">
-                    <div class="card mx-auto mb-3" style="width: 18rem">
-                        <h4 class="card-header font-weight-bold bg-primary">${name}<br><br> <span class="font-weight-light font-italic">Manager</span></h4>
-                        <ul class="list-group list-group-flush rounded-circle">
-                            <li class="list-group-item">ID: ${id}</li>
-                            <li class="list-group-item">Email Address: <a href="mailto:${email}">${email}</a></li>
-                            <li class="list-group-item">Office Phone: <br>${officePhone}</li>
-                        </ul>
-                    </div>
+    
+    const name = teamMember.getName();
+    const role = teamMember.getRole();
+    const id = teamMember.getId();
+    const email = teamMember.getEmail();
+    let data = ''
+    let roleInfo = ''
+    let roleDiff = ''
+    let colorPosition = ''
+  
+    if (role === "Manager") {
+        roleInfo = teamMember.getOffice();
+        roleDiff = 'Office Number: '
+        colorPosition = 'bg-primary'
+    } else if (role === "Intern") {
+        roleInfo = teamMember.getSchool();
+        roleDiff = 'School: '
+        colorPosition = 'bg-warning'
+    } else {
+        roleInfo = teamMember.getGithub();
+        roleDiff = 'Github Adress: '
+        colorPosition = 'bg-success'
+    }   
+  
+    data = `
+            <div class="col-6">
+                <div class="card mx-auto mb-3" style="width: 18rem">
+                    <h4 class="card-header font-weight-bold ${colorPosition}">${name}<br><br> <span class="font-weight-light font-italic">${role}</span></h4>
+                    <ul class="list-group list-group-flush rounded-circle">
+                        <li class="list-group-item">ID: ${id}</li>
+                        <li class="list-group-item">Email Address: <a href="mailto:${email}">${email}</a></li>
+                        <li class="list-group-item">${roleDiff}<br>${roleInfo}</li>
+                    </ul>
                 </div>
-            `
-        } else if (role === "Intern") {
-            const school = teamMember.getSchool();
-            data = `
-                <div class="col-6">
-                    <div class="card mx-auto mb-3" style="width: 18rem">
-                        <h4 class="card-header font-weight-bold bg-secondary">${name}<br><br> <span class="font-weight-light font-italic">Intern</span></h4>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">ID: ${id}</li>
-                            <li class="list-group-item">Email Address: <br><a href="mailto:${email}">${email}</a></li>
-                            <li class="list-group-item">School: UCF</li>
-                        </ul>
-                    </div>
-                </div>
-            `
-        } else {
-            const gitHub = teamMember.getGithub();
-            data = 
-            `
-                <div class="col-6">
-                    <div class="card mx-auto mb-3" style="width: 18rem">
-                        <h4 class="card-header font-weight-bold bg-secondary">${name}<br><br> <span class="font-weight-light font-italic">Engineer</span></h4>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">ID: ${id}</li>
-                            <li class="list-group-item">Email Address: <br><a href="mailto:${email}">${email}</a></li>
-                            <li class="list-group-item">GitHub: <a href="https://github.com/${gitHub}" target="blank">${gitHub}</a></li>
-                        </ul>
-                    </div>
-                </div>
-            `
+            </div>
+        `
+  
+    console.log("team member added");
+    fs.appendFile("./dist/index.html", data, function(err){
+        if (err){
+            console.log(err)
         }
-
-        console.log("team member added");
-        fs.appendFile("./dist/index.html", data, function(err){
-            if (err){
-                console.log(err)
-            }
-        })
-    });
-}
+    })
+  
+  }
 
 function finishHTML (){
     const finishHTML = `
